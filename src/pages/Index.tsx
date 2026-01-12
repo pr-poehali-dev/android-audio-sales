@@ -97,20 +97,25 @@ const Index = () => {
     </Card>
   );
 
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   const NavBar = () => (
-    <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
+    <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border shadow-sm">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-8">
-            <h1 className="text-2xl font-bold font-montserrat text-primary">AutoSound Elite</h1>
+            <h1 className="text-2xl font-bold font-montserrat text-primary">A-B Car Audio</h1>
             <div className="hidden md:flex space-x-6">
               {['home', 'catalog', 'about', 'delivery', 'warranty', 'returns', 'faq', 'contacts'].map((section) => (
                 <button
                   key={section}
-                  onClick={() => setActiveSection(section)}
-                  className={`text-sm font-medium transition-colors hover:text-primary ${
-                    activeSection === section ? 'text-primary' : 'text-muted-foreground'
-                  }`}
+                  onClick={() => scrollToSection(section)}
+                  className="text-sm font-medium transition-colors hover:text-primary text-muted-foreground"
                 >
                   {section === 'home' && 'Главная'}
                   {section === 'catalog' && 'Каталог'}
@@ -209,34 +214,31 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <NavBar />
 
-      {activeSection === 'home' && (
-        <>
-          <section className="relative py-20 px-4 overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/10" />
-            <div className="container mx-auto text-center relative z-10">
-              <h1 className="text-5xl md:text-7xl font-bold font-montserrat mb-6 animate-fade-in">
-                Премиум автомагнитолы <span className="text-primary">Android</span>
-              </h1>
-              <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-                Элегантное решение для вашего автомобиля. Качество, технологии, стиль.
-              </p>
-              <div className="flex justify-center gap-4">
-                <Button size="lg" onClick={() => setActiveSection('catalog')} className="bg-primary hover:bg-primary/90">
-                  <Icon name="Sparkles" className="mr-2 h-5 w-5" />
-                  Смотреть каталог
-                </Button>
-                {!isLoggedIn && (
-                  <Button size="lg" variant="outline" onClick={() => setActiveSection('catalog')}>
-                    Оптовым клиентам
-                  </Button>
-                )}
-              </div>
-            </div>
-          </section>
+      <section id="home" className="relative py-20 px-4 overflow-hidden bg-gradient-to-br from-blue-50 to-white">
+        <div className="container mx-auto text-center relative z-10">
+          <h1 className="text-5xl md:text-7xl font-bold font-montserrat mb-6 animate-fade-in text-foreground">
+            Премиум автомагнитолы <span className="text-primary">Android</span>
+          </h1>
+          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+            Элегантное решение для вашего автомобиля. Качество, технологии, стиль.
+          </p>
+          <div className="flex justify-center gap-4">
+            <Button size="lg" onClick={() => scrollToSection('catalog')} className="bg-primary hover:bg-primary/90">
+              <Icon name="Sparkles" className="mr-2 h-5 w-5" />
+              Смотреть каталог
+            </Button>
+            {!isLoggedIn && (
+              <Button size="lg" variant="outline" onClick={() => scrollToSection('catalog')}>
+                Оптовым клиентам
+              </Button>
+            )}
+          </div>
+        </div>
+      </section>
 
-          <section className="py-16 px-4 bg-secondary/30">
-            <div className="container mx-auto">
-              <h2 className="text-3xl font-bold text-center mb-12 font-montserrat">Преимущества</h2>
+      <section className="py-16 px-4 bg-secondary/30">
+        <div className="container mx-auto">
+          <h2 className="text-3xl font-bold text-center mb-12 font-montserrat">Преимущества</h2>
               <div className="grid md:grid-cols-4 gap-6">
                 {[
                   { icon: 'Shield', title: 'Гарантия качества', desc: '2 года официальной гарантии' },
@@ -256,64 +258,57 @@ const Index = () => {
                     </CardContent>
                   </Card>
                 ))}
-              </div>
-            </div>
-          </section>
-        </>
-      )}
+          </div>
+        </div>
+      </section>
 
-      {activeSection === 'catalog' && (
-        <section className="py-16 px-4">
-          <div className="container mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-4xl font-bold mb-4 font-montserrat">Каталог</h2>
+      <section id="catalog" className="py-16 px-4">
+        <div className="container mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold mb-4 font-montserrat">Каталог</h2>
               {isLoggedIn && (
                 <Badge variant="default" className="bg-accent text-accent-foreground">
                   <Icon name="CheckCircle" className="mr-1 h-3 w-3" />
                   Оптовые цены активны
                 </Badge>
-              )}
-            </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {products.map(product => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
+            )}
           </div>
-        </section>
-      )}
-
-      {activeSection === 'about' && (
-        <section className="py-16 px-4">
-          <div className="container mx-auto max-w-4xl">
-            <h2 className="text-4xl font-bold mb-8 font-montserrat">О компании</h2>
-            <Card>
-              <CardContent className="pt-6 space-y-4 text-muted-foreground">
-                <p>
-                  <strong className="text-foreground">AutoSound Elite</strong> — официальный поставщик премиум автомагнитол Android в России.
-                </p>
-                <p>
-                  Мы работаем с 2018 года и зарекомендовали себя как надежный партнер для автосалонов, 
-                  установочных центров и розничных покупателей.
-                </p>
-                <Separator />
-                <div>
-                  <p className="font-semibold text-foreground mb-2">Юридическая информация:</p>
-                  <p>ООО "АвтоСаунд Элит"</p>
-                  <p>ИНН: 7701234567</p>
-                  <p>ОГРН: 1187746123456</p>
-                  <p>Юридический адрес: г. Москва, ул. Примерная, д. 1, офис 100</p>
-                </div>
-              </CardContent>
-            </Card>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {products.map(product => (
+              <ProductCard key={product.id} product={product} />
+            ))}
           </div>
-        </section>
-      )}
+        </div>
+      </section>
 
-      {activeSection === 'delivery' && (
-        <section className="py-16 px-4">
-          <div className="container mx-auto max-w-4xl">
-            <h2 className="text-4xl font-bold mb-8 font-montserrat">Доставка</h2>
+      <section id="about" className="py-16 px-4 bg-secondary/30">
+        <div className="container mx-auto max-w-4xl">
+          <h2 className="text-4xl font-bold mb-8 font-montserrat">О компании</h2>
+          <Card>
+            <CardContent className="pt-6 space-y-4 text-muted-foreground">
+              <p>
+                <strong className="text-foreground">A-B Car Audio</strong> — официальный поставщик премиум автомагнитол Android в России.
+              </p>
+              <p>
+                Мы работаем с 2018 года и зарекомендовали себя как надежный партнер для автосалонов, 
+                установочных центров и розничных покупателей.
+              </p>
+              <Separator />
+              <div>
+                <p className="font-semibold text-foreground mb-2">Юридическая информация:</p>
+                <p>ООО "А-Б Кар Аудио"</p>
+                <p>ИНН: 7701234567</p>
+                <p>ОГРН: 1187746123456</p>
+                <p>Юридический адрес: г. Москва, ул. Примерная, д. 1, офис 100</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
+      <section id="delivery" className="py-16 px-4">
+        <div className="container mx-auto max-w-4xl">
+          <h2 className="text-4xl font-bold mb-8 font-montserrat">Доставка</h2>
             <div className="space-y-6">
               <Card>
                 <CardHeader>
@@ -348,15 +343,13 @@ const Index = () => {
                   Бесплатно из нашего офиса в Москве (предварительная договоренность обязательна)
                 </CardContent>
               </Card>
-            </div>
           </div>
-        </section>
-      )}
+        </div>
+      </section>
 
-      {activeSection === 'warranty' && (
-        <section className="py-16 px-4">
-          <div className="container mx-auto max-w-4xl">
-            <h2 className="text-4xl font-bold mb-8 font-montserrat">Гарантия</h2>
+      <section id="warranty" className="py-16 px-4 bg-secondary/30">
+        <div className="container mx-auto max-w-4xl">
+          <h2 className="text-4xl font-bold mb-8 font-montserrat">Гарантия</h2>
             <Card>
               <CardContent className="pt-6 space-y-4 text-muted-foreground">
                 <p className="text-lg font-semibold text-foreground">На все устройства предоставляется официальная гарантия 24 месяца.</p>
@@ -375,15 +368,13 @@ const Index = () => {
                   <li>Самостоятельный ремонт или вскрытие устройства</li>
                 </ul>
               </CardContent>
-            </Card>
-          </div>
-        </section>
-      )}
+          </Card>
+        </div>
+      </section>
 
-      {activeSection === 'returns' && (
-        <section className="py-16 px-4">
-          <div className="container mx-auto max-w-4xl">
-            <h2 className="text-4xl font-bold mb-8 font-montserrat">Возврат и обмен</h2>
+      <section id="returns" className="py-16 px-4">
+        <div className="container mx-auto max-w-4xl">
+          <h2 className="text-4xl font-bold mb-8 font-montserrat">Возврат и обмен</h2>
             <Card>
               <CardContent className="pt-6 space-y-4 text-muted-foreground">
                 <p>
@@ -404,15 +395,13 @@ const Index = () => {
                   товара на наш склад. Стоимость обратной доставки оплачивается покупателем.
                 </p>
               </CardContent>
-            </Card>
-          </div>
-        </section>
-      )}
+          </Card>
+        </div>
+      </section>
 
-      {activeSection === 'faq' && (
-        <section className="py-16 px-4">
-          <div className="container mx-auto max-w-4xl">
-            <h2 className="text-4xl font-bold mb-8 font-montserrat">Часто задаваемые вопросы</h2>
+      <section id="faq" className="py-16 px-4 bg-secondary/30">
+        <div className="container mx-auto max-w-4xl">
+          <h2 className="text-4xl font-bold mb-8 font-montserrat">Часто задаваемые вопросы</h2>
             <Accordion type="single" collapsible className="space-y-4">
               <AccordionItem value="item-1" className="border rounded-lg px-6">
                 <AccordionTrigger>Как стать оптовым покупателем?</AccordionTrigger>
@@ -449,15 +438,13 @@ const Index = () => {
                   у менеджера по телефону или через форму обратной связи.
                 </AccordionContent>
               </AccordionItem>
-            </Accordion>
-          </div>
-        </section>
-      )}
+          </Accordion>
+        </div>
+      </section>
 
-      {activeSection === 'contacts' && (
-        <section className="py-16 px-4">
-          <div className="container mx-auto max-w-4xl">
-            <h2 className="text-4xl font-bold mb-8 font-montserrat">Контакты</h2>
+      <section id="contacts" className="py-16 px-4">
+        <div className="container mx-auto max-w-4xl">
+          <h2 className="text-4xl font-bold mb-8 font-montserrat">Контакты</h2>
             <div className="grid md:grid-cols-2 gap-6">
               <Card>
                 <CardHeader>
@@ -495,16 +482,15 @@ const Index = () => {
                   <p className="text-muted-foreground text-sm">Пн-Пт: 10:00-19:00, Сб-Вс: по записи</p>
                 </CardContent>
               </Card>
-            </div>
           </div>
-        </section>
-      )}
+        </div>
+      </section>
 
       <footer className="bg-secondary/50 border-t border-border py-8 mt-16">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-3 gap-8 mb-6">
             <div>
-              <h3 className="font-bold mb-3 font-montserrat">AutoSound Elite</h3>
+              <h3 className="font-bold mb-3 font-montserrat">A-B Car Audio</h3>
               <p className="text-sm text-muted-foreground">
                 Премиум автомагнитолы Android для вашего автомобиля
               </p>
@@ -512,24 +498,24 @@ const Index = () => {
             <div>
               <h4 className="font-semibold mb-3">Информация</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li className="cursor-pointer hover:text-primary transition-colors" onClick={() => setActiveSection('about')}>О компании</li>
-                <li className="cursor-pointer hover:text-primary transition-colors" onClick={() => setActiveSection('delivery')}>Доставка</li>
-                <li className="cursor-pointer hover:text-primary transition-colors" onClick={() => setActiveSection('warranty')}>Гарантия</li>
+                <li className="cursor-pointer hover:text-primary transition-colors" onClick={() => scrollToSection('about')}>О компании</li>
+                <li className="cursor-pointer hover:text-primary transition-colors" onClick={() => scrollToSection('delivery')}>Доставка</li>
+                <li className="cursor-pointer hover:text-primary transition-colors" onClick={() => scrollToSection('warranty')}>Гарантия</li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold mb-3">Поддержка</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li className="cursor-pointer hover:text-primary transition-colors" onClick={() => setActiveSection('faq')}>FAQ</li>
-                <li className="cursor-pointer hover:text-primary transition-colors" onClick={() => setActiveSection('returns')}>Возврат</li>
-                <li className="cursor-pointer hover:text-primary transition-colors" onClick={() => setActiveSection('contacts')}>Контакты</li>
+                <li className="cursor-pointer hover:text-primary transition-colors" onClick={() => scrollToSection('faq')}>FAQ</li>
+                <li className="cursor-pointer hover:text-primary transition-colors" onClick={() => scrollToSection('returns')}>Возврат</li>
+                <li className="cursor-pointer hover:text-primary transition-colors" onClick={() => scrollToSection('contacts')}>Контакты</li>
               </ul>
             </div>
           </div>
           <Separator className="mb-6" />
           <div className="text-center text-sm text-muted-foreground">
-            <p>© 2024 AutoSound Elite. Все права защищены.</p>
-            <p className="mt-2">ООО "АвтоСаунд Элит" • ИНН 7701234567 • ОГРН 1187746123456</p>
+            <p>© 2024 A-B Car Audio. Все права защищены.</p>
+            <p className="mt-2">ООО "А-Б Кар Аудио" • ИНН 7701234567 • ОГРН 1187746123456</p>
           </div>
         </div>
       </footer>
