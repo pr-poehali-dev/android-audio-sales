@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -11,6 +12,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import Icon from '@/components/ui/icon';
 
 const Index = () => {
+  const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const [cart, setCart] = useState<Array<{id: number, name: string, price: number}>>([]);
@@ -513,9 +515,20 @@ const Index = () => {
             </div>
           </div>
           <Separator className="mb-6" />
-          <div className="text-center text-sm text-muted-foreground">
-            <p>© 2024 A-B Car Audio. Все права защищены.</p>
-            <p className="mt-2">ООО "А-Б Кар Аудио" • ИНН 7701234567 • ОГРН 1187746123456</p>
+          <div className="text-center space-y-3">
+            <div className="flex justify-center gap-4 text-xs text-muted-foreground">
+              <button onClick={() => navigate('/privacy-policy')} className="hover:text-primary transition-colors">
+                Политика конфиденциальности
+              </button>
+              <button onClick={() => navigate('/terms-of-service')} className="hover:text-primary transition-colors">
+                Пользовательское соглашение
+              </button>
+              <button onClick={() => navigate('/offer-agreement')} className="hover:text-primary transition-colors">
+                Договор оферты
+              </button>
+            </div>
+            <p className="text-sm text-muted-foreground">© 2026 A-B Car Audio. Все права защищены.</p>
+            <p className="text-xs text-muted-foreground">ИП Ибрагимов Евгений Маратович • ИНН 7701234567 • ОГРНИП 1187746123456</p>
           </div>
         </div>
       </footer>
